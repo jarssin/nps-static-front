@@ -1,0 +1,198 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1,
+h2 {
+  padding-top: 5%;
+  padding-bottom: 1%;
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+input[type="text"] {
+  width: 80%;
+  height: 40px;
+  padding: 3%;
+  margin: 1%;
+  padding-bottom: 10%;
+  border: 1px solid #333;
+  border-radius: 5px;
+}
+
+.rating-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.rating-container input[type="radio"] {
+  display: none;
+}
+
+rating-container label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.rating-box {
+  display: inline-block;
+  width: 50px;
+  height: 40px;
+  margin: 5px;
+  font-size: 1.5em;
+  text-align: center;
+  color: white;
+  border-radius: 5px;
+  line-height: 40px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#super-unsatisfied {
+  background-color: #ff0000;
+}
+
+#super-unsatisfied:hover {
+  background-color: #b30000;
+}
+
+input[type="radio"]:checked+.rating-box#super-unsatisfied {
+  background-color: #b30000;
+}
+
+#neutral {
+  background-color: #ff9900;
+}
+
+#neutral:hover {
+  background-color: #bb7307;
+}
+
+input[type="radio"]:checked+.rating-box#neutral {
+  background-color: #bb7307;
+}
+
+#satisfied {
+  background-color: #33cc33;
+}
+
+#satisfied:hover {
+  background-color: #1f7a1f;
+}
+
+input[type="radio"]:checked+.rating-box#satisfied {
+  background-color: #1f7a1f;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1%;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  color: white;
+  background-color: #333;
+  border: none;
+  cursor: pointer;
+  margin: 20px 0;
+  min-height: 40px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-right: 2px solid white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 800px) {
+
+  h1,
+  h2 {
+    font-size: 1.5em;
+    padding-top: 5%;
+    padding-bottom: 1%;
+  }
+
+  input[type="text"] {
+    width: 90%;
+    height: 35px;
+    padding: 5%;
+    margin: 2%;
+    font-size: 16px;
+  }
+
+  button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+
+  .rating-container {
+    margin: 10px;
+  }
+
+  .rating-box {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2em;
+    line-height: 35px;
+    margin: 1px;
+  }
+}
