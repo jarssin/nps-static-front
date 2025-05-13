@@ -49,6 +49,14 @@ input[type="text"] {
   border-radius: 5px;
 }
 
+input[type="text"] {
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+  transform: scale(1.1);
+}
+
 .rating-container {
   display: flex;
   justify-content: center;
@@ -62,6 +70,17 @@ input[type="text"] {
 
 .rating-container input[type="radio"] {
   display: none;
+}
+
+.rating-container input[type="radio"]:checked+.rating-box {
+  background-color: #2563eb;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.rating-box:active {
+  transform: scale(0.95);
 }
 
 rating-container label {
@@ -194,5 +213,43 @@ button {
     font-size: 1.2em;
     line-height: 35px;
     margin: 1px;
+  }
+}
+
+@media (min-width: 1024px) and (pointer: coarse) {
+
+  h1,
+  h2 {
+    font-size: 2.5em;
+    padding-top: 8%;
+    padding-bottom: 4%;
+  }
+
+  input[type="text"] {
+    width: 95%;
+    height: 60px;
+    font-size: 1.2em;
+    padding: 4%;
+    margin: 2%;
+  }
+
+  button {
+    padding: 16px 32px;
+    font-size: 1.2em;
+    min-height: 60px;
+  }
+
+  .rating-box {
+    width: 60px;
+    height: 60px;
+    font-size: 1.8em;
+    line-height: 60px;
+    margin: 5px;
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border-width: 3px;
   }
 }

@@ -19,6 +19,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const form = document.querySelector("form");
 
+  const commentInput = document.getElementById("comment-input");
+  document.querySelectorAll('input[name="score"]').forEach((radio) => {
+    radio.addEventListener("change", () => {
+      if (commentInput) {
+        commentInput.focus();
+      }
+    });
+  });
+
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
