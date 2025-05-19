@@ -143,17 +143,16 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 1%;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 1em;
+  margin: 20px 0;
+  border-radius: 8px;
+  padding: 18px 36px;
+  font-size: 1.3em;
   font-weight: bold;
   color: white;
   background-color: #333;
   border: none;
   cursor: pointer;
-  margin: 20px 0;
-  min-height: 40px;
+  min-height: 60px;
 }
 
 .spinner {
