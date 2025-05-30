@@ -83,44 +83,5 @@
     </button>
   </form>
 
-<script>
-  const form = document.querySelector("form");
-  const radios = document.querySelectorAll('input[name="score"]');
-  const commentField = document.getElementById("comment-input");
-
-  let typingTimeout = null;
-  let submitTimeout = null;
-
-  function startAutoSubmitCountdown() {
-    submitTimeout = setTimeout(() => {
-      form.submit();
-    }, 5000); // Envia após 5 segundos de inatividade
-  }
-
-  function resetTypingTimer() {
-    if (submitTimeout) clearTimeout(submitTimeout);
-    if (typingTimeout) clearTimeout(typingTimeout);
-
-    typingTimeout = setTimeout(() => {
-      startAutoSubmitCountdown();
-    }, 2000); // Considera que parou de digitar após 2 segundos
-  }
-
-  commentField.addEventListener("input", () => {
-    resetTypingTimer();
-  });
-
-  radios.forEach(radio => {
-    radio.addEventListener("change", () => {
-      commentField.focus();
-
-      if (submitTimeout) clearTimeout(submitTimeout);
-      submitTimeout = setTimeout(() => {
-        form.submit();
-      }, 10000); // Envia após 10 segundos se não digitar nada
-    });
-  });
-</script>
-
 </body>
 </html>
