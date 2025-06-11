@@ -14,11 +14,17 @@ const NPSSurvey = () => {
   const { toast } = useToast();
   const [score, setScore] = useState<number | null>(null);
   const scoreRef = useRef<number | null>(null);
-  const [journeyEvaluations, setJourneyEvaluations] = useState<Record<string, boolean | null>>({});
+  const [journeyEvaluations, setJourneyEvaluations] = useState<
+    Record<string, number | null>
+  >({});
   const [comment, setComment] = useState('');
-  const [step, setStep] = useState<'nps' | 'journey' | 'comment' | 'thanks'>('nps');
+  const [step, setStep] = useState<'nps' | 'journey' | 'comment' | 'thanks'>(
+    'journey'
+  );
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<number | null>(null);
+  const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<
+    number | null
+  >(null);
   const [isStepCompleted, setIsStepCompleted] = useState(false);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -39,13 +45,15 @@ const NPSSurvey = () => {
     }
   };
 
-  const startAutoAdvanceTimer = (nextStep: 'journey' | 'comment' | 'thanks') => {
+  const startAutoAdvanceTimer = (
+    nextStep: 'journey' | 'comment' | 'thanks'
+  ) => {
     clearTimers();
     setAutoAdvanceCountdown(20);
     setIsStepCompleted(true);
 
     countdownRef.current = setInterval(() => {
-      setAutoAdvanceCountdown(prev => {
+      setAutoAdvanceCountdown((prev) => {
         if (prev === null || prev <= 1) {
           clearTimers();
           setAutoAdvanceCountdown(null);
@@ -58,7 +66,9 @@ const NPSSurvey = () => {
     }, 1000);
   };
 
-  const resetAutoAdvanceTimer = (nextStep: 'journey' | 'comment' | 'thanks') => {
+  const resetAutoAdvanceTimer = (
+    nextStep: 'journey' | 'comment' | 'thanks'
+  ) => {
     if (isStepCompleted) {
       clearTimers();
       setAutoAdvanceCountdown(null);
@@ -67,7 +77,9 @@ const NPSSurvey = () => {
     }
   };
 
-  const handleStepTransition = async (nextStep: 'nps' | 'journey' | 'comment' | 'thanks') => {
+  const handleStepTransition = async (
+    nextStep: 'nps' | 'journey' | 'comment' | 'thanks'
+  ) => {
     clearTimers();
     setAutoAdvanceCountdown(null);
     setIsStepCompleted(false);
@@ -80,13 +92,13 @@ const NPSSurvey = () => {
           score: scoreRef.current,
           journeyEvaluations,
           comment,
-          visitorId
+          visitorId,
         });
       } catch (error) {
         toast({
-          title: "Error",
-          description: "Failed to submit survey. Please try again.",
-          variant: "destructive"
+          title: 'Error',
+          description: 'Failed to submit survey. Please try again.',
+          variant: 'destructive',
         });
       }
     }
@@ -111,10 +123,10 @@ const NPSSurvey = () => {
     }, 300);
   };
 
-  const handleJourneyEvaluation = (journey: string, value: boolean) => {
-    setJourneyEvaluations(prev => ({
+  const handleJourneyEvaluation = (journey: string, value: number) => {
+    setJourneyEvaluations((prev) => ({
       ...prev,
-      [journey]: value
+      [journey]: value,
     }));
     resetAutoAdvanceTimer('comment');
   };
@@ -149,7 +161,13 @@ const NPSSurvey = () => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-5xl">
-        <div className={`transition-all duration-300 ${isTransitioning ? 'opacity-0 transform translate-y-4' : 'opacity-100 transform translate-y-0'}`}>
+        <div
+          className={`transition-all duration-300 ${
+            isTransitioning
+              ? 'opacity-0 transform translate-y-4'
+              : 'opacity-100 transform translate-y-0'
+          }`}
+        >
           {step === 'nps' && (
             <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
               <NPSQuestion
@@ -207,10 +225,32 @@ const NPSSurvey = () => {
 
         <div className="flex justify-center mt-12">
           <div className="flex space-x-2">
-            <div className={`w-2 h-2 rounded-full transition-all duration-500 ${step === 'nps' ? 'bg-primary scale-125' : 'bg-muted scale-100'}`} />
-            <div className={`w-2 h-2 rounded-full transition-all duration-500 ${step === 'journey' ? 'bg-primary scale-125' : 'bg-muted scale-100'}`} />
-            <div className={`w-2 h-2 rounded-full transition-all duration-500 ${step === 'comment' ? 'bg-primary scale-125' : 'bg-muted scale-100'}`} />
-            <div className={`w-2 h-2 rounded-full transition-all duration-500 ${step === 'thanks' ? 'bg-primary scale-125' : 'bg-muted scale-100'}`} />
+            <div
+              className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                step === 'nps' ? 'bg-primary scale-125' : 'bg-muted scale-100'
+              }`}
+            />
+            <div
+              className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                step === 'journey'
+                  ? 'bg-primary scale-125'
+                  : 'bg-muted scale-100'
+              }`}
+            />
+            <div
+              className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                step === 'comment'
+                  ? 'bg-primary scale-125'
+                  : 'bg-muted scale-100'
+              }`}
+            />
+            <div
+              className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                step === 'thanks'
+                  ? 'bg-primary scale-125'
+                  : 'bg-muted scale-100'
+              }`}
+            />
           </div>
         </div>
       </div>

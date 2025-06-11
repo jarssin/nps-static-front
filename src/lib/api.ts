@@ -1,7 +1,7 @@
 interface SurveySubmission {
   phone: string;
   score: number | null;
-  journeyEvaluations: Record<string, boolean | null>;
+  journeyEvaluations: Record<string, number | boolean | null>;
   comment: string;
   visitorId: string;
 }
@@ -23,4 +23,4 @@ export const submitSurvey = async (data: SurveySubmission): Promise<void> => {
     console.error('Error submitting survey:', error);
     throw error;
   }
-}; 
+};
