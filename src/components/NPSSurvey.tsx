@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NPSQuestion from './NPSQuestion';
-import JourneyEvaluation from './JourneyEvaluation';
+import JourneyEvaluationCsat from './JourneyEvaluation';
 import CommentSection from './CommentSection';
 import ThankYou from './ThankYou';
 import { usePhoneNumber } from '@/hooks/usePhoneNumber';
 import { useVisitorId } from '@/hooks/useVisitorId';
 import { submitSurvey } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
+import JourneyEvaluationBoolean from './JourneyEvaluationBoolean';
 
 const NPSSurvey = () => {
   const phone = usePhoneNumber();
@@ -15,11 +16,11 @@ const NPSSurvey = () => {
   const [score, setScore] = useState<number | null>(null);
   const scoreRef = useRef<number | null>(null);
   const [journeyEvaluations, setJourneyEvaluations] = useState<
-    Record<string, number | null>
+    Record<string, boolean | null>
   >({});
   const [comment, setComment] = useState('');
   const [step, setStep] = useState<'nps' | 'journey' | 'comment' | 'thanks'>(
-    'journey'
+    'nps'
   );
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<
@@ -93,6 +94,7 @@ const NPSSurvey = () => {
           journeyEvaluations,
           comment,
           visitorId,
+          type: 'nps',
         });
       } catch (error) {
         toast({
@@ -123,7 +125,7 @@ const NPSSurvey = () => {
     }, 300);
   };
 
-  const handleJourneyEvaluation = (journey: string, value: number) => {
+  const handleJourneyEvaluation = (journey: string, value: boolean) => {
     setJourneyEvaluations((prev) => ({
       ...prev,
       [journey]: value,
@@ -180,7 +182,7 @@ const NPSSurvey = () => {
 
           {step === 'journey' && (
             <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
-              <JourneyEvaluation
+              <JourneyEvaluationBoolean
                 evaluations={journeyEvaluations}
                 onChange={handleJourneyEvaluation}
                 onComplete={handleJourneyComplete}
