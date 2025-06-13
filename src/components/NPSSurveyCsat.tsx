@@ -37,7 +37,7 @@ const NPSSurveyCsat = () => {
           journeyEvaluations,
           comment,
           visitorId,
-          type: 'boolean',
+          type: 'csat',
         });
       } catch (error) {
         toast({

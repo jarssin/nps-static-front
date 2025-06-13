@@ -4,7 +4,7 @@ interface SurveySubmission {
   journeyEvaluations: Record<string, number | boolean | null>;
   comment: string;
   visitorId: string;
-  type: 'boolean' | 'nps';
+  type: 'csat' | 'nps';
 }
 
 export const submitSurvey = async (data: SurveySubmission): Promise<void> => {
