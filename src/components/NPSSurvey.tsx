@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NPSQuestion from './NPSQuestion';
-import JourneyEvaluationCsat from './JourneyEvaluation';
 import CommentSection from './CommentSection';
 import ThankYou from './ThankYou';
 import { usePhoneNumber } from '@/hooks/usePhoneNumber';
 import { useVisitorId } from '@/hooks/useVisitorId';
 import { submitSurvey } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
-import JourneyEvaluationBoolean from './JourneyEvaluationBoolean';
+import LikeDislikeQuestion from './LikeDislikeQuestion';
+import { useAutoAdvanceTimer } from '@/hooks/useAutoAdvanceTimer';
+import { Step } from '@/Types/Steps';
 
 const NPSSurvey = () => {
   const phone = usePhoneNumber();
@@ -19,71 +20,10 @@ const NPSSurvey = () => {
     Record<string, boolean | null>
   >({});
   const [comment, setComment] = useState('');
-  const [step, setStep] = useState<'nps' | 'journey' | 'comment' | 'thanks'>(
-    'nps'
-  );
+  const [step, setStep] = useState<Step>('nps');
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<
-    number | null
-  >(null);
-  const [isStepCompleted, setIsStepCompleted] = useState(false);
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const countdownRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    scoreRef.current = score;
-  }, [score]);
-
-  const clearTimers = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-    if (countdownRef.current) {
-      clearInterval(countdownRef.current);
-      countdownRef.current = null;
-    }
-  };
-
-  const startAutoAdvanceTimer = (
-    nextStep: 'journey' | 'comment' | 'thanks'
-  ) => {
-    clearTimers();
-    setAutoAdvanceCountdown(20);
-    setIsStepCompleted(true);
-
-    countdownRef.current = setInterval(() => {
-      setAutoAdvanceCountdown((prev) => {
-        if (prev === null || prev <= 1) {
-          clearTimers();
-          setAutoAdvanceCountdown(null);
-          setIsStepCompleted(false);
-          handleStepTransition('thanks');
-          return null;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const resetAutoAdvanceTimer = (
-    nextStep: 'journey' | 'comment' | 'thanks'
-  ) => {
-    if (isStepCompleted) {
-      clearTimers();
-      setAutoAdvanceCountdown(null);
-      setIsStepCompleted(false);
-      startAutoAdvanceTimer(nextStep);
-    }
-  };
-
-  const handleStepTransition = async (
-    nextStep: 'nps' | 'journey' | 'comment' | 'thanks'
-  ) => {
-    clearTimers();
-    setAutoAdvanceCountdown(null);
-    setIsStepCompleted(false);
+  const handleStepTransition = async (nextStep: Step) => {
     setIsTransitioning(true);
 
     if (nextStep === 'thanks') {
@@ -110,6 +50,20 @@ const NPSSurvey = () => {
       setIsTransitioning(false);
     }, 200);
   };
+
+  const {
+    autoAdvanceCountdown,
+    isStepCompleted,
+    startAutoAdvanceTimer,
+    resetAutoAdvanceTimer,
+    cleanup,
+  } = useAutoAdvanceTimer(handleStepTransition, step);
+
+  useEffect(() => {
+    return () => {
+      cleanup();
+    };
+  }, [cleanup]);
 
   const handleNPSComplete = () => {
     handleStepTransition('journey');
@@ -143,22 +97,13 @@ const NPSSurvey = () => {
   };
 
   const handleReset = () => {
-    clearTimers();
     setScore(null);
     scoreRef.current = null;
     setJourneyEvaluations({});
     setComment('');
-    setAutoAdvanceCountdown(null);
-    setIsStepCompleted(false);
+    cleanup();
     handleStepTransition('nps');
   };
-
-  // Clean up timers on unmount
-  useEffect(() => {
-    return () => {
-      clearTimers();
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -182,7 +127,7 @@ const NPSSurvey = () => {
 
           {step === 'journey' && (
             <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
-              <JourneyEvaluationBoolean
+              <LikeDislikeQuestion
                 evaluations={journeyEvaluations}
                 onChange={handleJourneyEvaluation}
                 onComplete={handleJourneyComplete}

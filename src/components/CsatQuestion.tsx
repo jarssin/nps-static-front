@@ -15,7 +15,7 @@ const journeys = [
   'Formas de Pagamento',
 ];
 
-const JourneyEvaluationCsat = ({
+const CsatQuestion = ({
   evaluations,
   onChange,
   onComplete,
@@ -101,4 +101,4 @@ const JourneyEvaluationCsat = ({
   );
 };
 
-export default JourneyEvaluationCsat;
+export default CsatQuestion;

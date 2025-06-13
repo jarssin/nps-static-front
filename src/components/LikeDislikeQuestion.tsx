@@ -16,7 +16,7 @@ const journeys = [
   'Formas de Pagamento',
 ];
 
-const JourneyEvaluationBoolean = ({
+const LikeDislikeQuestion = ({
   evaluations,
   onChange,
   onComplete,
@@ -114,4 +114,4 @@ const JourneyEvaluationBoolean = ({
   );
 };
 
-export default JourneyEvaluationBoolean;
+export default LikeDislikeQuestion;
