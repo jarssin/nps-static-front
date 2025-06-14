@@ -1,9 +1,10 @@
 interface SurveySubmission {
   phone: string;
-  score: number | null;
+  score?: number | null;
   journeyEvaluations: Record<string, number | boolean | null>;
   comment: string;
   visitorId: string;
+  type: 'csat' | 'nps';
 }
 
 export const submitSurvey = async (data: SurveySubmission): Promise<void> => {
