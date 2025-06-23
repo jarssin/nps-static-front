@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils';
 
 interface JourneyEvaluationProps {
-  evaluations: Record<string, number | boolean | null>;
-  onChange: (journey: string, value: number | boolean) => void;
+  evaluations: Record<string, number |null>;
+  onChange: (journey: string, value: number) => void;
   onComplete: () => void;
 }
 

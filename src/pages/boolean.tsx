@@ -1,4 +1,4 @@
-import NPSSurveyBoolean from '@/components/NPSSurveyCsat';
+import NPSSurveyBoolean from '@/components/CSATSurvey';
 export default function NPSBoolean() {
   return <NPSSurveyBoolean />;
 }
