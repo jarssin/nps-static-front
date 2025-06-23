@@ -1,6 +1,5 @@
-
-import React, { useEffect, useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { CheckCircle } from "lucide-react";
 
 interface ThankYouProps {
   onReset: () => void;
@@ -31,10 +30,12 @@ const ThankYou = ({ onReset }: ThankYouProps) => {
           Obrigado!
         </h2>
         <p className="text-lg text-muted-foreground mb-4">
-          Seu feedback foi enviado com sucesso. Agradecemos muito por dedicar seu tempo para nos ajudar a melhorar.
+          Seu feedback foi enviado com sucesso. Agradecemos muito por dedicar
+          seu tempo para nos ajudar a melhorar.
         </p>
         <p className="text-sm text-muted-foreground">
-          Retornando à pesquisa em {countdown} segundo{countdown !== 1 ? 's' : ''}...
+          Retornando à pesquisa em {countdown} segundo
+          {countdown !== 1 ? "s" : ""}...
         </p>
       </div>
     </div>

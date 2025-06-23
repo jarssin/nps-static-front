@@ -9,7 +9,7 @@ interface SurveySubmission {
 
 export const submitSurvey = async (data: SurveySubmission): Promise<void> => {
   try {
-    const response = await fetch('http://localhost:8080/create-survey', {
+    const response = await fetch(`http://localhost:8080/create-survey?type=${data.type}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
