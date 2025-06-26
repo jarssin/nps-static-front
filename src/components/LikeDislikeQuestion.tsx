@@ -1,5 +1,6 @@
-import { ThumbsUp, ThumbsDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { ThumbsUp, ThumbsDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useConfig } from "@/hooks/useConfig";
 
 interface JourneyEvaluationProps {
   evaluations: Record<string, boolean | null>;
@@ -7,20 +8,14 @@ interface JourneyEvaluationProps {
   onComplete: () => void;
 }
 
-const journeys = [
-  'Atendimento do Vendedor',
-  'Custo benefício',
-  'Variedade',
-  'Tempo de espera',
-  'Atendimento do Caixa',
-  'Formas de Pagamento',
-];
-
 const LikeDislikeQuestion = ({
   evaluations,
   onChange,
   onComplete,
 }: JourneyEvaluationProps) => {
+  const config = useConfig();
+  const journeys = config.texts.journey.aspects;
+
   const handleEvaluation = (journey: string, value: boolean) => {
     onChange(journey, value);
 
@@ -47,10 +42,10 @@ const LikeDislikeQuestion = ({
     <div className="w-full max-w-3xl mx-auto px-6">
       <div className="text-center mb-8">
         <h1 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-          Deixe sua opinião
+          {config.texts.journey.title}
         </h1>
         <p className="text-muted-foreground text-lg mb-2">
-          Avalie cada aspecto da sua experiência
+          {config.texts.journey.subtitle}
         </p>
         <p className="text-sm text-muted-foreground">
           {completedCount}/{journeys.length} avaliações concluídas
@@ -72,10 +67,10 @@ const LikeDislikeQuestion = ({
                 <button
                   onClick={() => handleEvaluation(journey, false)}
                   className={cn(
-                    'flex items-center justify-center w-12 h-12 rounded-lg transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+                    "flex items-center justify-center w-12 h-12 rounded-lg transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
                     evaluations[journey] === false
-                      ? 'bg-red-500 text-white shadow-lg scale-105'
-                      : 'bg-muted hover:bg-red-100 text-muted-foreground hover:text-red-600'
+                      ? "bg-red-500 text-white shadow-lg scale-105"
+                      : "bg-muted hover:bg-red-100 text-muted-foreground hover:text-red-600"
                   )}
                   aria-label={`Não gostei de ${journey}`}
                 >
@@ -85,10 +80,10 @@ const LikeDislikeQuestion = ({
                 <button
                   onClick={() => handleEvaluation(journey, true)}
                   className={cn(
-                    'flex items-center justify-center w-12 h-12 rounded-lg transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+                    "flex items-center justify-center w-12 h-12 rounded-lg transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
                     evaluations[journey] === true
-                      ? 'bg-green-500 text-white shadow-lg scale-105'
-                      : 'bg-muted hover:bg-green-100 text-muted-foreground hover:text-green-600'
+                      ? "bg-green-500 text-white shadow-lg scale-105"
+                      : "bg-muted hover:bg-green-100 text-muted-foreground hover:text-green-600"
                   )}
                   aria-label={`Gostei de ${journey}`}
                 >

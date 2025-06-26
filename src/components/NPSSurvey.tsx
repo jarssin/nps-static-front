@@ -7,8 +7,12 @@ import { usePhoneNumber } from "@/hooks/usePhoneNumber";
 import { useVisitorId } from "@/hooks/useVisitorId";
 import { submitSurvey } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
+import { useConfig } from "@/hooks/useConfig";
+import ThemeProvider from "./ThemeProvider";
+import Header from "./Header";
 
 const NPSSurvey = () => {
+  const config = useConfig();
   const phone = usePhoneNumber();
   const visitorId = useVisitorId();
   const { toast } = useToast();
@@ -47,7 +51,7 @@ const NPSSurvey = () => {
 
   const startAutoAdvanceTimer = () => {
     clearTimers();
-    setAutoAdvanceCountdown(20);
+    setAutoAdvanceCountdown(config.settings.autoAdvanceTimeout);
     setIsStepCompleted(true);
 
     countdownRef.current = setInterval(() => {
@@ -155,102 +159,111 @@ const NPSSurvey = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl">
-        <div
-          className={`transition-all duration-300 ${
-            isTransitioning
-              ? "opacity-0 transform translate-y-4"
-              : "opacity-100 transform translate-y-0"
-          }`}
-        >
-          {step === "nps" && (
-            <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
-              <NPSQuestion
-                value={score}
-                onChange={setScore}
-                onComplete={handleNPSComplete}
-              />
-            </div>
+    <ThemeProvider>
+      <div
+        className="min-h-screen bg-background flex items-center justify-center p-4"
+        style={{ backgroundColor: config.theme.backgroundColor }}
+      >
+        <div className="w-full max-w-5xl">
+          {step === "nps" && config.name == "Panificadora Boa União" && (
+            <Header />
           )}
 
-          {step === "journey" && (
-            <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
-              <LikeDislikeQuestion
-                evaluations={journeyEvaluations}
-                onChange={handleJourneyEvaluation}
-                onComplete={handleJourneyComplete}
-              />
-            </div>
-          )}
-
-          {step === "comment" && (
-            <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
-              <CommentSection
-                comment={comment}
-                onChange={handleCommentChange}
-                onSubmit={handleSubmit}
-                isVisible={step === "comment"}
-                npsScore={score}
-              />
-            </div>
-          )}
-
-          {step === "thanks" && (
-            <div className="animate-in fade-in-50 scale-in-95 duration-500">
-              <ThankYou onReset={handleReset} />
-            </div>
-          )}
-        </div>
-
-        {autoAdvanceCountdown !== null && (
-          <div className="fixed top-4 right-4 bg-card border border-border rounded-lg p-3 shadow-lg animate-in slide-in-from-top-2 duration-300">
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground mb-1">
-                Avançando automaticamente em
-              </p>
-              <div className="text-lg font-bold text-primary">
-                {autoAdvanceCountdown}
+          <div
+            className={`transition-all duration-300 ${
+              isTransitioning
+                ? "opacity-0 transform translate-y-4"
+                : "opacity-100 transform translate-y-0"
+            }`}
+          >
+            {step === "nps" && (
+              <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
+                <NPSQuestion
+                  value={score}
+                  onChange={setScore}
+                  onComplete={handleNPSComplete}
+                />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Interaja para reiniciar
-              </p>
-            </div>
-          </div>
-        )}
+            )}
 
-        <div className="flex justify-center mt-12">
-          <div className="flex space-x-2">
-            <div
-              className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                step === "nps" ? "bg-primary scale-125" : "bg-muted scale-100"
-              }`}
-            />
-            <div
-              className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                step === "journey"
-                  ? "bg-primary scale-125"
-                  : "bg-muted scale-100"
-              }`}
-            />
-            <div
-              className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                step === "comment"
-                  ? "bg-primary scale-125"
-                  : "bg-muted scale-100"
-              }`}
-            />
-            <div
-              className={`w-2 h-2 rounded-full transition-all duration-500 ${
-                step === "thanks"
-                  ? "bg-primary scale-125"
-                  : "bg-muted scale-100"
-              }`}
-            />
+            {step === "journey" && (
+              <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
+                <LikeDislikeQuestion
+                  evaluations={journeyEvaluations}
+                  onChange={handleJourneyEvaluation}
+                  onComplete={handleJourneyComplete}
+                />
+              </div>
+            )}
+
+            {step === "comment" && (
+              <div className="animate-in fade-in-50 slide-in-from-right-4 duration-500">
+                <CommentSection
+                  comment={comment}
+                  onChange={handleCommentChange}
+                  onSubmit={handleSubmit}
+                  isVisible={step === "comment"}
+                  npsScore={score}
+                />
+              </div>
+            )}
+
+            {step === "thanks" && (
+              <div className="animate-in fade-in-50 scale-in-95 duration-500">
+                <ThankYou onReset={handleReset} />
+              </div>
+            )}
+          </div>
+
+          {autoAdvanceCountdown !== null && (
+            <div className="fixed top-4 right-4 bg-card border border-border rounded-lg p-3 shadow-lg animate-in slide-in-from-top-2 duration-300">
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground mb-1">
+                  {config.texts.autoAdvance.message}
+                </p>
+                <div className="text-lg font-bold text-primary">
+                  {autoAdvanceCountdown}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {config.texts.autoAdvance.instruction}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-center mt-12">
+            <div className="flex space-x-2">
+              <div
+                className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                  step === "nps" ? "bg-primary scale-125" : "bg-muted scale-100"
+                }`}
+              />
+              <div
+                className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                  step === "journey"
+                    ? "bg-primary scale-125"
+                    : "bg-muted scale-100"
+                }`}
+              />
+              <div
+                className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                  step === "comment"
+                    ? "bg-primary scale-125"
+                    : "bg-muted scale-100"
+                }`}
+              />
+              <div
+                className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                  step === "thanks"
+                    ? "bg-primary scale-125"
+                    : "bg-muted scale-100"
+                }`}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 

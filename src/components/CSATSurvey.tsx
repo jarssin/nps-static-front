@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import CommentSection from "./CommentSection";
 import ThankYou from "./ThankYou";
 import { usePhoneNumber } from "@/hooks/usePhoneNumber";
@@ -6,8 +6,12 @@ import { useVisitorId } from "@/hooks/useVisitorId";
 import { submitSurvey } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import CsatQuestion from "./CSATQuestion";
+import ThemeProvider from "./ThemeProvider";
+import { useConfig } from "@/hooks/useConfig";
+import Header from "./Header";
 
 const CSATSurvey = () => {
+  const config = useConfig();
   const phone = usePhoneNumber();
   const visitorId = useVisitorId();
   const { toast } = useToast();
@@ -130,48 +134,54 @@ const CSATSurvey = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl">
-        <div
-          className={`transition-all duration-300 ${
-            isTransitioning ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          {step === "journey" && (
-            <CsatQuestion
-              evaluations={journeyEvaluations}
-              onChange={handleJourneyEvaluation}
-              onComplete={handleJourneyComplete}
-            />
-          )}
-          {step === "comment" && (
-            <CommentSection
-              comment={comment}
-              onChange={handleCommentChange}
-              onSubmit={handleSubmit}
-              isVisible={step === "comment"}
-              npsScore={null}
-            />
-          )}
-          {step === "thanks" && <ThankYou onReset={handleReset} />}
-        </div>
-        {autoAdvanceCountdown !== null && (
-          <div className="fixed top-4 right-4 bg-card border border-border rounded-lg p-3 shadow-lg animate-in slide-in-from-top-2 duration-300">
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground mb-1">
-                Avançando automaticamente em
-              </p>
-              <div className="text-lg font-bold text-primary">
-                {autoAdvanceCountdown}
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Interaja para reiniciar
-              </p>
-            </div>
+    <ThemeProvider>
+      <div
+        className="min-h-screen bg-background flex items-center justify-center p-4"
+        style={{ backgroundColor: config.theme.backgroundColor }}
+      >
+        <div className="w-full max-w-5xl">
+          {step === "journey" && <Header />}
+          <div
+            className={`transition-all duration-300 ${
+              isTransitioning ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            {step === "journey" && (
+              <CsatQuestion
+                evaluations={journeyEvaluations}
+                onChange={handleJourneyEvaluation}
+                onComplete={handleJourneyComplete}
+              />
+            )}
+            {step === "comment" && (
+              <CommentSection
+                comment={comment}
+                onChange={handleCommentChange}
+                onSubmit={handleSubmit}
+                isVisible={step === "comment"}
+                npsScore={null}
+              />
+            )}
+            {step === "thanks" && <ThankYou onReset={handleReset} />}
           </div>
-        )}
+          {autoAdvanceCountdown !== null && (
+            <div className="fixed top-4 right-4 bg-card border border-border rounded-lg p-3 shadow-lg animate-in slide-in-from-top-2 duration-300">
+              <div className="text-center">
+                <p className="text-xs text-muted-foreground mb-1">
+                  Avançando automaticamente em
+                </p>
+                <div className="text-lg font-bold text-primary">
+                  {autoAdvanceCountdown}
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Interaja para reiniciar
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 
