@@ -1,7 +1,7 @@
-
-import React, { useEffect, useRef } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+import React, { useEffect, useRef } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useConfig } from "@/hooks/useConfig";
 
 interface CommentSectionProps {
   comment: string;
@@ -11,7 +11,14 @@ interface CommentSectionProps {
   npsScore: number | null;
 }
 
-const CommentSection = ({ comment, onChange, onSubmit, isVisible, npsScore }: CommentSectionProps) => {
+const CommentSection = ({
+  comment,
+  onChange,
+  onSubmit,
+  isVisible,
+  npsScore,
+}: CommentSectionProps) => {
+  const config = useConfig();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -25,9 +32,9 @@ const CommentSection = ({ comment, onChange, onSubmit, isVisible, npsScore }: Co
 
   const getPromptText = () => {
     if (npsScore === null) return "Por favor, compartilhe seu feedback...";
-    if (npsScore >= 9) return "Ficamos felizes que você nos recomendaria! O que fizemos bem?";
-    if (npsScore >= 7) return "Obrigado pelo seu feedback! Como podemos melhorar sua experiência?";
-    return "Agradecemos seu feedback honesto. O que podemos fazer melhor?";
+    if (npsScore >= 9) return config.texts.comment.prompts.promoter;
+    if (npsScore >= 7) return config.texts.comment.prompts.passive;
+    return config.texts.comment.prompts.detractor;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,32 +49,31 @@ const CommentSection = ({ comment, onChange, onSubmit, isVisible, npsScore }: Co
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="text-center mb-6">
           <h2 className="text-xl md:text-2xl font-semibold text-foreground mb-2">
-            Conte-nos mais
+            {config.texts.comment.title}
           </h2>
-          <p className="text-muted-foreground mb-2">
-            {getPromptText()}
-          </p>
+          <p className="text-muted-foreground mb-2">{getPromptText()}</p>
           <p className="text-sm text-muted-foreground">
-            Comentários são opcionais, mas nos ajudam a entender melhor sua experiência.
+            {config.texts.comment.subtitle}
           </p>
         </div>
-        
+
         <div className="space-y-4">
           <Textarea
             ref={textareaRef}
             value={comment}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="Seu feedback nos ajuda a melhorar..."
+            placeholder={config.texts.comment.placeholder}
             className="min-h-32 resize-none text-base focus:ring-2 focus:ring-primary"
-            maxLength={500}
+            maxLength={config.settings.maxCommentLength || 500}
           />
-          
+
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">
-              {comment.length}/500 caracteres
+              {comment.length}/{config.settings.maxCommentLength || 500}{" "}
+              caracteres
             </span>
-            
-            <Button 
+
+            <Button
               type="submit"
               size="lg"
               className="px-8 transition-all duration-200 hover:scale-105"

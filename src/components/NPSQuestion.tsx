@@ -1,4 +1,5 @@
-import { cn } from '@/lib/utils';
+import { useConfig } from "@/hooks/useConfig";
+import { cn } from "@/lib/utils";
 
 interface NPSQuestionProps {
   value: number | null;
@@ -7,6 +8,8 @@ interface NPSQuestionProps {
 }
 
 const NPSQuestion = ({ value, onChange, onComplete }: NPSQuestionProps) => {
+  const config = useConfig();
+
   const handleRatingClick = (rating: number) => {
     onChange(rating);
 
@@ -19,10 +22,10 @@ const NPSQuestion = ({ value, onChange, onComplete }: NPSQuestionProps) => {
     <div className="w-full max-w-4xl mx-auto px-6">
       <div className="text-center mb-12">
         <h1 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-          Qual a probabilidade de você nos recomendar para um amigo ou colega?
+          {config.texts.nps.question}
         </h1>
         <p className="text-muted-foreground text-lg">
-          Por favor, selecione uma nota de 1 a 10
+          {config.texts.nps.subtitle}
         </p>
       </div>
 
@@ -46,8 +49,8 @@ const NPSQuestion = ({ value, onChange, onComplete }: NPSQuestionProps) => {
         </div>
 
         <div className="flex justify-between text-sm text-muted-foreground px-2">
-          <span>Nada provável</span>
-          <span>Extremamente provável</span>
+          <span>{config.texts.nps.labels.unlikely}</span>
+          <span>{config.texts.nps.labels.likely}</span>
         </div>
       </div>
     </div>

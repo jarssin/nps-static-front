@@ -1,35 +1,45 @@
-import { cn } from '@/lib/utils';
+import { useConfig } from "@/hooks/useConfig";
+import { cn } from "@/lib/utils";
+import { useRef, useEffect } from "react";
 
 interface JourneyEvaluationProps {
-  evaluations: Record<string, number |null>;
+  evaluations: Record<string, number | null>;
   onChange: (journey: string, value: number) => void;
   onComplete: () => void;
 }
-
-const journeys = [
-  'Atendimento do Vendedor',
-  'Custo benefício',
-  'Variedade',
-  'Tempo de espera',
-  'Atendimento do Caixa',
-  'Formas de Pagamento',
-];
 
 const CsatQuestion = ({
   evaluations,
   onChange,
   onComplete,
 }: JourneyEvaluationProps) => {
+  const config = useConfig();
+  const journeys = config.texts.journey.aspects;
+  const buttonRefs = useRef<(HTMLButtonElement | null)[][]>([]);
+
+  useEffect(() => {
+    buttonRefs.current = journeys.map(
+      (_, i) => buttonRefs.current[i] || Array(5).fill(null)
+    );
+  }, [journeys.length]);
+
   const handleEvaluation = (journey: string, value: number) => {
     onChange(journey, value);
+    const idx = journeys.findIndex((j) => j === journey);
+    for (let i = idx + 1; i < journeys.length; i++) {
+      if (evaluations[journeys[i]] == null) {
+        setTimeout(() => {
+          buttonRefs.current[i][0]?.focus();
+        }, 50);
+        break;
+      }
+    }
 
-    // Check if all journeys have been evaluated
     const updatedEvaluations = { ...evaluations, [journey]: value };
     const allEvaluated = journeys.every(
       (j) =>
         updatedEvaluations[j] !== null && updatedEvaluations[j] !== undefined
     );
-
     if (allEvaluated) {
       setTimeout(() => {
         onComplete();
@@ -45,18 +55,17 @@ const CsatQuestion = ({
     <div className="w-full max-w-3xl mx-auto px-6">
       <div className="text-center mb-8">
         <h1 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
-          Deixe sua opinião
+          {config.texts.csat.question}
         </h1>
         <p className="text-muted-foreground text-lg mb-2">
-          Avalie cada aspecto da sua experiência (1 = ruim, 5 = excelente)
+          {config.texts.csat.subtitle}
         </p>
         <p className="text-sm text-muted-foreground">
           {completedCount}/{journeys.length} avaliações concluídas
         </p>
       </div>
-
       <div className="space-y-4">
-        {journeys.map((journey) => (
+        {journeys.map((journey, i) => (
           <div
             key={journey}
             className="bg-card border border-border rounded-lg p-4"
@@ -66,15 +75,19 @@ const CsatQuestion = ({
                 {journey}
               </h3>
               <div className="flex gap-2 ml-4">
-                {[1, 2, 3, 4, 5].map((num) => (
+                {[1, 2, 3, 4, 5].map((num, j) => (
                   <button
                     key={num}
+                    ref={(el) => {
+                      if (!buttonRefs.current[i]) buttonRefs.current[i] = [];
+                      buttonRefs.current[i][j] = el;
+                    }}
                     onClick={() => handleEvaluation(journey, num)}
                     className={cn(
-                      'flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200 text-base font-bold',
+                      "flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-200 text-base font-bold",
                       evaluations[journey] === num
-                        ? 'bg-primary text-white border-primary scale-110 shadow'
-                        : 'bg-muted text-muted-foreground border-border hover:bg-primary/10'
+                        ? "bg-primary text-white border-primary scale-110 shadow"
+                        : "bg-muted text-muted-foreground border-border hover:bg-primary/10"
                     )}
                     aria-label={`Nota ${num} para ${journey}`}
                   >
@@ -86,7 +99,6 @@ const CsatQuestion = ({
           </div>
         ))}
       </div>
-
       {completedCount > 0 && (
         <div className="mt-6">
           <div className="w-full bg-muted rounded-full h-2">
